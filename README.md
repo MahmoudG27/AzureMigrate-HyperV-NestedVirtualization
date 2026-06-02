@@ -13,7 +13,7 @@ It simulates an Hyper-V bare-metal server using an Azure VM that hosts an Hyper-
   - [Hyper-V Host installation & configuration](#hyper-v-host-installation--configuration)
   - [Hyper-V Guest VM Creation](#hyper-v-guest-vm-creation)
     - [Linux - Ubuntu](#linux---ubuntu)
-    - [Linux - CentOS 7.9](#linux---centos-79)
+    - [Linux - CentOS 9 stream](#linux---centos-9-stream)
     - [Windows - Server Server 2019](#windows---server-server-2019)
 - [Azure Migrate](#azure-migrate)
   - [Azure Migrate - Discovery and assessment](#azure-migrate---discovery-and-assessment)
@@ -191,45 +191,9 @@ ip -c a s
 ```
 ![Ubuntu Machine](docs/ubuntu04.png)
 
-### Linux - CentOS 7.9
+### Linux - CentOS 9 stream
 
-Download [CentOS 7 Linux](https://www.centos.org/download/) *.iso* file and create Hyper-VM Virtual Machine as seen before.
-
-To manually update network configuration on CentOS 7 machine, update `/etc/sysconfig/network-scripts/ifcfg-eth0` file:
-
-```bash
-# static IP address on CentOS 7 or RHEL 7#
-HWADDR=00:08:A2:0A:BA:B8
-TYPE=Ethernet
-BOOTPROTO=none
-# Server IP #
-IPADDR=192.168.0.5
-# Subnet #
-PREFIX=24
-# Set default gateway IP #
-GATEWAY=192.168.0.1
-# Set dns servers #
-DNS1=8.8.8.8
-DNS2=8.8.4.4
-DNS3=1.1.1.1
-DEFROUTE=yes
-IPV4_FAILURE_FATAL=no
-# Disable ipv6 #
-IPV6INIT=no
-NAME=eth0
-DEVICE=eth0
-ONBOOT=yes
-```
-
-Restart network service:
-```bash
-systemctl restart network
-```
-
-View updated configuration:
-```bash
-ip a s eth0
-```
+Download [CentOS 9 stream Linux](https://mirrors.centos.org/mirrorlist?path=/9-stream/BaseOS/x86_64/iso/CentOS-Stream-9-latest-x86_64-dvd1.iso&redirect=1&protocol=https) *.iso* file and create Hyper-VM Virtual Machine as seen before.
 
 Screenshot:
 ![CentOS](docs/centos01.png)
