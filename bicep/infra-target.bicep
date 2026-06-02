@@ -1,6 +1,6 @@
 // Resource Group 2: Target Resource Group for Azure Migrate
 
-param targetLocation string = 'northeurope'
+param targetLocation string = 'eastus'
 param targetStorageAccountName string = 'targetreplicatesa'
 param targetVnetName string = 'vnettarget'
 param targetVnetAddressSpace string = '10.233.0.0/16'
