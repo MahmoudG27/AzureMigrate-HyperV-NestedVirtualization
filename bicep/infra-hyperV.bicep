@@ -1,6 +1,6 @@
 // Resource Group 1: Nested Hyper-V virtualization
 
-param nestedvirtuaLocation string = 'eastus'
+param nestedvirtuaLocation string = 'westus2'
 param nestedvirtuaVnetName string = 'vnet-hyperv'
 param nestedvirtuaVnetAddressSpace string = '10.221.0.0/24'
 param nestedvirtuaDefaultSubnet string = '10.221.0.0/24'
@@ -50,8 +50,8 @@ module hyperv_vm './modules/Vm.bicep' = {
     VmOsSku: VmOsSku
     VmOsVersion: VmOsVersion
     VmNicSubnetId: vnet.outputs.defaultsubnetid
-    adminUsername: Administrator 
-    adminPassword: P@ssword@123
+    adminUsername: mahmoud 
+    adminPassword: Password@123
     diagnosticsStorageUri: diagnosticstorageaccount.outputs.blobUri
     licenseType: 'Windows_Server'
     datadisksize: 1024
