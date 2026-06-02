@@ -195,6 +195,82 @@ ip -c a s
 
 Download [CentOS 9 stream Linux](https://mirrors.centos.org/mirrorlist?path=/9-stream/BaseOS/x86_64/iso/CentOS-Stream-9-latest-x86_64-dvd1.iso&redirect=1&protocol=https) *.iso* file and create Hyper-VM Virtual Machine as seen before.
 
+Configure a static IP address on CentOS Stream 9 using NetworkManager. To identify the network interface name:
+
+```bash
+ip a
+```
+or
+```bash
+nmcli device status
+```
+
+Example interface name:
+
+```text
+ens33
+```
+
+To manually configure a static IP address:
+
+```bash
+# Set static IP address #
+nmcli con mod "System ens33" ipv4.addresses 192.168.0.5/24
+
+# Set default gateway #
+nmcli con mod "System ens33" ipv4.gateway 192.168.0.1
+
+# Set DNS servers #
+nmcli con mod "System ens33" ipv4.dns "8.8.8.8 8.8.4.4 1.1.1.1"
+
+# Configure IPv4 as manual #
+nmcli con mod "System ens33" ipv4.method manual
+```
+
+Restart network connection:
+
+```bash
+nmcli con down "System ens33"
+nmcli con up "System ens33"
+```
+
+Or restart NetworkManager service:
+
+```bash
+systemctl restart NetworkManager
+```
+
+View updated configuration:
+
+```bash
+ip a
+```
+
+View routing table:
+
+```bash
+ip route
+```
+
+View DNS configuration:
+
+```bash
+cat /etc/resolv.conf
+```
+
+Expected output:
+
+```text
+2: ens33: <BROADCAST,MULTICAST,UP,LOWER_UP>
+    inet 192.168.0.5/24 brd 192.168.0.255 scope global ens33
+
+default via 192.168.0.1 dev ens33
+
+nameserver 8.8.8.8
+nameserver 8.8.4.4
+nameserver 1.1.1.1
+```
+
 Screenshot:
 ![CentOS](docs/centos01.png)
 
