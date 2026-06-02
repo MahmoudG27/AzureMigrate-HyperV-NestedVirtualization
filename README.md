@@ -27,12 +27,12 @@ It simulates an Hyper-V bare-metal server using an Azure VM that hosts an Hyper-
 
 ```bash
 # Create a resource group
-$ az group create --location westeurope --name MyRg
+$ az group create --location easrus --name hyperV-rg
 # Close repo
-$ git clone https://github.com/dawlysd/lab-azuremigrate-hyperv-nestedvirtualization
-$ cd lab-azuremigrate-hyperv-nestedvirtualization/bicep
+$ git clone https://github.com/MahmoudG27/AzureMigrate-HyperV-NestedVirtualization
+$ cd AzureMigrate-HyperV-NestedVirtualization/bicep
 # Deploy Bicep code
-$ az deployment group create --resource-group MyRg --template-file infra-hyperV.bicep
+$ az deployment group create --resource-group hyperV-rg --template-file infra-hyperV.bicep
 ```
 
 ## Hyper-V Host installation & configuration
@@ -122,20 +122,17 @@ Set-VMHost -VirtualHardDiskPath $HyperVPath -VirtualMachinePath $HyperVPath
 
 ### Linux - Ubuntu
 
-**Download** [Ubuntu Server](https://ubuntu.com/download/server) **.iso** on Hyper-V host machine. Several links here: [Ubuntu 18.04](https://releases.ubuntu.mirror.malte-bittner.eu/18.04.6/ubuntu-18.04.6-live-server-amd64.iso), [Ubuntu 20.04 LTS](https://mirrors.ircam.fr/pub/ubuntu/releases/20.04.3/ubuntu-20.04.3-live-server-amd64.iso), [Ubuntu 21.10](https://www-ftp.lip6.fr/pub/linux/distributions/Ubuntu/releases/21.10/ubuntu-21.10-live-server-amd64.iso).
-
+**Download** [Ubuntu Server](https://ubuntu.com/download/server) **.iso** on Hyper-V host machine. Several links here: [Ubuntu 22.04](https://releases.ubuntu.com/22.04/ubuntu-22.04.5-desktop-amd64.iso), [Ubuntu 20.04.6 LTS](https://releases.ubuntu.com/20.04/ubuntu-20.04.6-desktop-amd64.iso).
 Example:
 ```powershell
 $locationFolder="E:\Hyper-V\"
 
-# Download Ubuntu 18.04
-Invoke-WebRequest -Uri "https://releases.ubuntu.com/18.04.6/ubuntu-18.04.6-live-server-amd64.iso" -OutFile "$($locationFolder)ubuntu-18.04.6-live-server-amd64.iso"
-
 # Download Ubuntu 20.04 LTS
-Invoke-WebRequest -Uri "https://releases.ubuntu.com/20.04/ubuntu-20.04.4-live-server-amd64.iso" -OutFile "$($locationFolder)ubuntu-20.04.3-live-server-amd64.iso"
+Invoke-WebRequest -Uri "https://releases.ubuntu.com/20.04/ubuntu-20.04.6-desktop-amd64.iso" -OutFile "$($locationFolder)ubuntu-20.04.6-desktop-amd64.iso"
 
-# Download Ubuntu 21.10
-Invoke-WebRequest -Uri "https://www-ftp.lip6.fr/pub/linux/distributions/Ubuntu/releases/21.10/ubuntu-21.10-live-server-amd64.iso" -OutFile "$($locationFolder)ubuntu-21.10-live-server-amd64.iso"
+# Download Ubuntu 22.04 LTS
+Invoke-WebRequest -Uri "https://releases.ubuntu.com/22.04/ubuntu-22.04.5-desktop-amd64.iso" -OutFile "$($locationFolder)ubuntu-22.04.5-desktop-amd64.iso"
+
 ```
 
 Create new Hyper-V virtual machine with Hyper-V Manager:
