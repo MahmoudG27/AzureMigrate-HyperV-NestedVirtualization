@@ -105,7 +105,7 @@ Store                            : Local
 Active                           : True
 ```
 
-Turn off Windows Defender Firewall
+Turn off  Defender Firewall
 ```powershell
 Set-NetFirewallProfile -Profile Domain,Public,Private -Enabled False 
 ```
@@ -198,9 +198,15 @@ Download [CentOS 9 stream Linux](https://mirrors.centos.org/mirrorlist?path=/9-s
 Screenshot:
 ![CentOS](docs/centos01.png)
 
+
 ### Windows - Server Server 2019
 
-Download [Windows Server 2019](https://www.microsoft.com/en-US/evalcenter/evaluate-windows-server-2019?filetype=ISO) trial *.iso* file and create Hyper-VM Virtual Machine as seen before.
+Download [Windows Server 2019](https://software-static.download.prss.microsoft.com/dbazure/988969d5-f34g-4e03-ac9d-1f9786c66749/17763.3650.221105-1748.rs5_release_svc_refresh_SERVER_EVAL_x64FRE_en-us.iso) trial *.iso* file and create Hyper-VM Virtual Machine as seen before.
+
+### Windows - Server Server 2022
+
+Download [Windows Server 2019](https://software-static.download.prss.microsoft.com/pr/download/20348.1.210507-1500.fe_release_amd64fre_SERVER_LOF_PACKAGES_OEM.iso) trial *.iso* file and create Hyper-VM Virtual Machine as seen before.
+
 
 Apply the following network configuration on Windows VM:
 ![Windows](docs/windows01.png)
