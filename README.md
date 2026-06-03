@@ -27,7 +27,7 @@ It simulates an Hyper-V bare-metal server using an Azure VM that hosts an Hyper-
 
 ```bash
 # Create a resource group
-$ az group create --location easrus --name hyperV-rg
+$ az group create --location westus2 --name hyperV-rg
 # Close repo
 $ git clone https://github.com/MahmoudG27/AzureMigrate-HyperV-NestedVirtualization
 $ cd AzureMigrate-HyperV-NestedVirtualization/bicep
