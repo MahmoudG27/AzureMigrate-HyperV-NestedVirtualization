@@ -32,7 +32,7 @@ $ az group create --location westus2 --name hyperV-rg
 $ git clone https://github.com/MahmoudG27/AzureMigrate-HyperV-NestedVirtualization
 $ cd AzureMigrate-HyperV-NestedVirtualization/bicep
 # Deploy Bicep code
-$ az deployment group create --resource-group hyperV-rg --template-file infra-hyperV.bicep
+$ az deployment group create --resource-group hyperV-rg --template-file infra-hyperV.bicep --parameters adminPassword='YourStrongPasswordHere'
 ```
 
 ## Hyper-V Host installation & configuration
