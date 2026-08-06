@@ -83,8 +83,6 @@ module hyperv './modules/Vm.bicep' = {
 
     subnetId: vnet.outputs.subnetId
 
-    diagnosticsStorageUri: storage.outputs.blobUri
-
     dataDiskSize: dataDiskSize
 
     imagePublisher: 'MicrosoftWindowsServer'
