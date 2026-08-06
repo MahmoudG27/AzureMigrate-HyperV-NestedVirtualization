@@ -37,7 +37,15 @@ $ az deployment group create --resource-group hyperV-rg --template-file infra-hy
 
 ## Hyper-V Host installation & configuration
 
-It will install Hyper-V with the deployment because we mentioned it in the deployment file, **connect** to provisioned VM to make sure the Hyper-V installed. 
+When the deployment is done, connect to provisionned VM and install Hyper-V tools: execute following Powershell command as Administrator:
+```powershell
+Install-WindowsFeature -Name "Hyper-V" -IncludeManagementTools -Restart
+```
+
+VM will restart when installation is done.
+
+Connect again to the machine.
+
 
 To allow nested VMs communication, create an internal switch:
 ```powershell
