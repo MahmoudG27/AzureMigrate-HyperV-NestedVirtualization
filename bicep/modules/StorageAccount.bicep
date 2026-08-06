@@ -1,36 +1,72 @@
+@description('Storage Account Name')
 param storageAccountName string
-param location string
-param skuName string
 
-resource storageAccount 'Microsoft.Storage/storageAccounts@2019-06-01' = {
+@description('Azure Region')
+param location string = resourceGroup().location
+
+@description('Storage SKU')
+param skuName string = 'Standard_LRS'
+
+
+resource storageAccount 'Microsoft.Storage/storageAccounts@2023-01-01' = {
+
   name: storageAccountName
+
   location: location
-  kind: 'StorageV2'
+
+
   sku: {
+
     name: skuName
+
   }
-  properties:{
-    networkAcls:{
-      bypass: 'AzureServices'
-      virtualNetworkRules: []
-      ipRules: []
-      defaultAction: 'Allow'
-    }
+
+
+  kind: 'StorageV2'
+
+
+  properties: {
+
+
     supportsHttpsTrafficOnly: true
+
+
+    minimumTlsVersion: 'TLS1_2'
+
+
+    allowBlobPublicAccess: false
+
+
+    accessTier: 'Hot'
+
+
     encryption: {
+
       keySource: 'Microsoft.Storage'
+
+
       services: {
-        file:{
-          keyType: 'Account'
+
+        blob: {
+
           enabled: true
+
         }
-        blob:{
-          keyType: 'Account'
+
+
+        file: {
+
           enabled: true
+
         }
+
       }
+
     }
+
   }
+
 }
+
 
 output blobUri string = storageAccount.properties.primaryEndpoints.blob
