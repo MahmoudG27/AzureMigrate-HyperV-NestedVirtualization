@@ -13,7 +13,7 @@ param adminPassword string = 'Microsoft=1Microsoft=1'
 param VmOsType string = 'Windows' 
 param VmOsPublisher string = 'MicrosoftWindowsServer' 
 param VmOsOffer string = 'WindowsServer' 
-param VmOsSku string = '2019-Datacenter' 
+param VmOsSku string = '2022-datacenter' 
 param VmOsVersion string = 'latest'
 
 module vnet './modules/Vnet.bicep' = {
@@ -50,8 +50,8 @@ module hyperv_vm './modules/Vm.bicep' = {
     VmOsSku: VmOsSku
     VmOsVersion: VmOsVersion
     VmNicSubnetId: vnet.outputs.defaultsubnetid
-    adminUsername: mahmoud 
-    adminPassword: Password@123
+    adminUsername: adminUsername 
+    adminPassword: adminPassword
     diagnosticsStorageUri: diagnosticstorageaccount.outputs.blobUri
     licenseType: 'Windows_Server'
     datadisksize: 1024
