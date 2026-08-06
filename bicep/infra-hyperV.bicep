@@ -32,8 +32,6 @@ param addressSpace string = '10.221.0.0/24'
 @description('Subnet Prefix')
 param subnetPrefix string = '10.221.0.0/24'
 
-var storageAccountName = 'diag${uniqueString(resourceGroup().id)}'
-
 //
 // Virtual Network
 //
@@ -45,20 +43,6 @@ module vnet './modules/Vnet.bicep' = {
     vnetName: vnetName
     addressPrefix: addressSpace
     subnetPrefix: subnetPrefix
-  }
-}
-
-//
-// Storage Account
-//
-
-module storage './modules/StorageAccount.bicep' = {
-  name: 'storage'
-
-  params: {
-    storageAccountName: storageAccountName
-    location: location
-    skuName: 'Standard_LRS'
   }
 }
 
@@ -98,7 +82,6 @@ module hyperv './modules/Vm.bicep' = {
 
   dependsOn: [
     vnet
-    storage
   ]
 }
 
