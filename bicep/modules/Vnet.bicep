@@ -1,34 +1,58 @@
-@description('Specifies the Azure location where the resource should be created.')
+@description('Azure Region')
 param location string = resourceGroup().location
 
-@description('Specifies the name to use for the VNet.')
-param vnetname string
+@description('Virtual Network Name')
+param vnetName string
 
-@description('Specifies the VNet Address Prefix.')
-param addressprefix string = '10.0.1.0/24'
+@description('VNet Address Space')
+param addressPrefix string = '10.221.0.0/24'
 
-@description('Specifies the Subnet Address Prefix for the server subnet')
-param defaultsubnetprefix string = '10.0.1.0/26'
+@description('Subnet Address Prefix')
+param subnetPrefix string = '10.221.0.0/24'
 
-resource vnet 'Microsoft.Network/virtualNetworks@2020-05-01' = {
-  name: vnetname
+
+resource vnet 'Microsoft.Network/virtualNetworks@2023-09-01' = {
+
+  name: vnetName
+
   location: location
+
+
   properties: {
-      addressSpace: {
-          addressPrefixes: [
-              addressprefix
-          ]
-      }
-      subnets: [
-          {
-              name: 'default'
-              properties: {
-                  addressPrefix: defaultsubnetprefix          
-              }            
-          }
+
+    addressSpace: {
+
+      addressPrefixes: [
+
+        addressPrefix
+
       ]
+
+    }
+
+
+    subnets: [
+
+      {
+
+        name: 'default'
+
+
+        properties: {
+
+          addressPrefix: subnetPrefix
+
+        }
+
+      }
+
+    ]
+
   }
+
 }
 
-output id string = vnet.id
-output defaultsubnetid string = '${vnet.id}/subnets/default'
+
+output vnetId string = vnet.id
+
+output subnetId string = '${vnet.id}/subnets/default'
