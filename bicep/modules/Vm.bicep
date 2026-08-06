@@ -1,118 +1,330 @@
-param VmName string
-param VmLocation string
-param VmSize string
-param VmOsType string 
-param VmOsPublisher string 
-param VmOsOffer string 
-param VmOsSku string 
-param VmOsVersion string 
-param VmNicSubnetId string
-param diagnosticsStorageUri string
-param licenseType string = ''
-param datadisksize int 
-var VmOsDiskName = '${VmName}od01'
-var VmDataDiskName = '${VmName}dd01'
-var VmNicName = '${VmName}ni01'
-var VmPipName = '${VmName}pip01'
+param vmName string
+param location string
+param vmSize string
 
 param adminUsername string
 param adminPassword string
 
-resource Pip 'Microsoft.Network/publicIPAddresses@2020-06-01' = {
-  name: VmPipName
-  location: VmLocation
-  sku: {
-    name: 'Basic'
-  }
-  properties:{
-    publicIPAllocationMethod:'Dynamic'
-  }
-}
+param subnetId string
 
-resource Nic 'Microsoft.Network/networkInterfaces@2020-08-01' = {
-  name: VmNicName
-  location: VmLocation
+param diagnosticsStorageUri string
+
+param dataDiskSize int
+
+param imagePublisher string
+param imageOffer string
+param imageSku string
+param imageVersion string
+
+param licenseType string = 'Windows_Server'
+
+
+var nicName = '${vmName}-nic'
+var pipName = '${vmName}-pip'
+var nsgName = '${vmName}-nsg'
+var osDiskName = '${vmName}-osdisk'
+var dataDiskName = '${vmName}-datadisk'
+
+
+//
+// Network Security Group
+//
+
+resource nsg 'Microsoft.Network/networkSecurityGroups@2023-09-01' = {
+
+  name: nsgName
+
+  location: location
+
   properties: {
-    ipConfigurations: [
+
+    securityRules: [
+
       {
-        name: 'ipconfig1'
+        name: 'Allow-RDP'
+
         properties: {
-          privateIPAllocationMethod: 'Dynamic'
-          subnet: {
-            id: VmNicSubnetId
-          }
-          primary: true
-          publicIPAddress: {
-            id: Pip.id
-          }
+
+          priority: 100
+
+          direction: 'Inbound'
+
+          access: 'Allow'
+
+          protocol: 'Tcp'
+
+          sourcePortRange: '*'
+
+          destinationPortRange: '3389'
+
+          sourceAddressPrefix: '*'
+
+          destinationAddressPrefix: '*'
         }
       }
     ]
-    dnsSettings: {
-      dnsServers: []
-    }
-    enableAcceleratedNetworking: false
-    enableIPForwarding: false
   }
-  dependsOn:[
-    Pip
-  ]
 }
 
-resource VirtualMachine 'Microsoft.Compute/virtualMachines@2019-07-01' = {
-  name: VmName
-  location: VmLocation
+
+
+//
+// Public IP
+//
+
+resource pip 'Microsoft.Network/publicIPAddresses@2023-09-01' = {
+
+  name: pipName
+
+  location: location
+
+  sku: {
+
+    name: 'Standard'
+
+  }
+
   properties: {
-    hardwareProfile: {
-      vmSize: VmSize
-    }
-    storageProfile: {
-      osDisk: {
-        name: VmOsDiskName
-        createOption: 'FromImage'
-        osType: VmOsType
-        managedDisk:{
-          storageAccountType: 'Premium_LRS'
-        }
-      }
-      dataDisks: [
-        {
-          diskSizeGB: datadisksize
-          lun: 0
-          name: VmDataDiskName
-          createOption: 'Empty'
-        }
-      ]
-      imageReference: {
-        publisher: VmOsPublisher
-        offer: VmOsOffer
-        sku: VmOsSku
-        version: VmOsVersion
-      }
-    }
-    osProfile: {
-      computerName: VmName
-      adminUsername: adminUsername
-      adminPassword: adminPassword
-    }
-    diagnosticsProfile:{
-      bootDiagnostics:{
-        enabled: true
-        storageUri: diagnosticsStorageUri
-      }
-    }
-    licenseType: licenseType
-    networkProfile: {
-      networkInterfaces: [
-        {
-          id: Nic.id
-        }
-      ]
-    }
+
+    publicIPAllocationMethod: 'Static'
+
   }
-  dependsOn:[
-    Nic
-  ]
 }
 
-output VirtualMachineId string = VirtualMachine.id
+
+
+//
+// Network Interface
+//
+
+resource nic 'Microsoft.Network/networkInterfaces@2023-09-01' = {
+
+  name: nicName
+
+  location: location
+
+  properties: {
+
+    enableAcceleratedNetworking: true
+
+    ipConfigurations: [
+
+      {
+
+        name: 'ipconfig1'
+
+        properties: {
+
+          privateIPAllocationMethod: 'Dynamic'
+
+          subnet: {
+
+            id: subnetId
+
+          }
+
+          publicIPAddress: {
+
+            id: pip.id
+
+          }
+
+        }
+
+      }
+
+    ]
+
+    networkSecurityGroup: {
+
+      id: nsg.id
+
+    }
+
+  }
+
+}
+
+
+
+//
+// Virtual Machine
+//
+
+resource vm 'Microsoft.Compute/virtualMachines@2023-09-01' = {
+
+  name: vmName
+
+  location: location
+
+
+  properties: {
+
+
+    hardwareProfile: {
+
+      vmSize: vmSize
+
+    }
+
+
+    storageProfile: {
+
+
+      imageReference: {
+
+        publisher: imagePublisher
+
+        offer: imageOffer
+
+        sku: imageSku
+
+        version: imageVersion
+
+      }
+
+
+      osDisk: {
+
+        name: osDiskName
+
+        createOption: 'FromImage'
+
+        managedDisk: {
+
+          storageAccountType: 'StandardSSD_LRS'
+
+        }
+
+      }
+
+
+      dataDisks: [
+
+        {
+
+          name: dataDiskName
+
+          lun: 0
+
+          diskSizeGB: dataDiskSize
+
+          createOption: 'Empty'
+
+          managedDisk: {
+
+            storageAccountType: 'StandardSSD_LRS'
+
+          }
+
+        }
+
+      ]
+
+    }
+
+
+
+    osProfile: {
+
+      computerName: vmName
+
+      adminUsername: adminUsername
+
+      adminPassword: adminPassword
+
+    }
+
+
+
+    licenseType: licenseType
+
+
+
+    networkProfile: {
+
+      networkInterfaces: [
+
+        {
+
+          id: nic.id
+
+        }
+
+      ]
+
+    }
+
+
+
+    diagnosticsProfile: {
+
+      bootDiagnostics: {
+
+        enabled: true
+
+        storageUri: diagnosticsStorageUri
+
+      }
+
+    }
+
+
+
+    securityProfile: {
+
+      securityType: 'Standard'
+
+    }
+
+  }
+
+
+  dependsOn: [
+
+    nic
+
+  ]
+
+}
+
+
+
+
+//
+// Install Hyper-V Automatically
+//
+
+resource hypervExtension 'Microsoft.Compute/virtualMachines/extensions@2023-09-01' = {
+
+  parent: vm
+
+  name: 'install-hyperv'
+
+  location: location
+
+
+  properties: {
+
+    publisher: 'Microsoft.Compute'
+
+    type: 'CustomScriptExtension'
+
+    typeHandlerVersion: '1.10'
+
+
+    settings: {
+
+      fileUris: []
+
+      commandToExecute: 'powershell.exe -ExecutionPolicy Unrestricted -Command "Install-WindowsFeature -Name Hyper-V -IncludeManagementTools -Restart"'
+
+    }
+
+  }
+
+}
+
+
+
+output vmId string = vm.id
