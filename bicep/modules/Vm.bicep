@@ -7,8 +7,6 @@ param adminPassword string
 
 param subnetId string
 
-param diagnosticsStorageUri string
-
 param dataDiskSize int
 
 param imagePublisher string
@@ -105,7 +103,7 @@ resource nic 'Microsoft.Network/networkInterfaces@2023-09-01' = {
 
   properties: {
 
-    enableAcceleratedNetworking: true
+    enableAcceleratedNetworking: false
 
     ipConfigurations: [
 
@@ -257,20 +255,6 @@ resource vm 'Microsoft.Compute/virtualMachines@2023-09-01' = {
 
 
 
-    diagnosticsProfile: {
-
-      bootDiagnostics: {
-
-        enabled: true
-
-        storageUri: diagnosticsStorageUri
-
-      }
-
-    }
-
-
-
     securityProfile: {
 
       securityType: 'Standard'
@@ -317,7 +301,7 @@ resource hypervExtension 'Microsoft.Compute/virtualMachines/extensions@2023-09-0
 
       fileUris: []
 
-      commandToExecute: 'powershell.exe -ExecutionPolicy Unrestricted -Command "Install-WindowsFeature -Name Hyper-V -IncludeManagementTools -Restart"'
+      commandToExecute: 'powershell.exe -ExecutionPolicy Unrestricted -Command "Install-WindowsFeature -Name Hyper-V -IncludeManagementTools"'
 
     }
 
